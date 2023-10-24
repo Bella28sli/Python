@@ -1,8 +1,19 @@
 import keyboard
-
+import json
+import csv
+import os
 # запускать только в режиме отладки
-
+a=0
+Block1=-1
+KasZod=0
+KasAes=0
+EdZod=0
+EdAes=0
+RyZod=0
+RyAes=0
 player={"name":"", "nameform":"","zod":"","aes":""}
+jsondict ={"Txt": 0, "Kastiel": 0, "Edvard": 0, "Ryan": 0, "Amber": False}
+jsondict0 ={"Txt": 0, "Kastiel": 0, "Edvard": 0, "Ryan": 0, "Amber": False}
 lunch={"Куриный суп с фасолью", "Макароны с сыром", "Цезарь с креветками"}
 cloth={"юбку","джинсы","брюки","блузку","платье","рубашку","носки","топик","колготки"}
 bed={"Наволочку с цветами","Зелёную наволочку","Голубую наволочку","Зелёную простынь","Зелёный пододеяльник","Простынь с цветами","Голубую простынь","Пододеяльник с цветами","Голубой пододеяльник"}
@@ -10,24 +21,9 @@ bluebed={"","Голубую наволочку","Голубую простынь
 greenbed={"","Зелёную наволочку","Зелёную простынь","Зелёный пододеяльник"}
 flowerbed={"","Наволочку с цветами","Простынь с цветами","Пододеяльник с цветами"}
 newbed={""}
-a=0
-Block1=-1
-KasCom=0
-KasZod=0
-KasAes=0
-EdCom=0
-EdZod=0
-EdAes=0
-RyCom=0
-RyZod=0
-RyAes=0
-Txt=0
-Amber=0
 
-def TxtBlock(Txt):
-   global KasCom
-   global RyCom
-   global EdCom
+def TxtBlock():
+   global jsondict
    Block=[f"\tЗнаете, что может быть хуже поступления в старшую школу?"," Поступать дважды.", " Проучившись долгий год в New Jersey High School, я не позволяла себе думать о приближающемся переезде:","завела подруг, вступила в пару клубов, попыталась баллотироваться в президенты.", " Но конец августа уже наступил, пора было собирать вещички, прощаться с друзьями и отчаливать на другой конец страны в штат Вашингтон, где заботливые родители сняли мне квартирку."," Зачем было переезжать в такую даль?", " Что ж, помимо университета, который находится в Вашингтоне, это место привлекает отца за возможность карьерного роста, а мать за красоту ландшафта."," Но сами они пока не готовы переехать, а вот дочку любимую отправить под предлогом \"Чем раньше начнёшь жить самостоятельно, тем лучше\" это запросто."," Конечно, в Вашингтоне живёт какой-то троюродный дядя по маминой линии, но от нового места жительства до него добираться около часа, да и он не особо планирует поддерживать одинокую племяшку.\n", 
  "\tТак или иначе, посадку объявили и пути назад у меня не было."," Уже в самолёте, пока стюардесса любезно объясняла, как пристёгиваться, я, пытаясь найти хоть какие-то плюсы переезда (помимо ранее упомянутых), погрузилась в крепкий сон.\n",
  "\n\t***",
@@ -45,7 +41,7 @@ def TxtBlock(Txt):
  "— Ты знаешь, где здесь класс информатики?"," Я только недавно переехала, ","— договорить мне не дали:\n",
  "— Сейчас идёшь прямо до лестницы, от неё налево и 3 по счёту кабинет — твой, ","— он стремительно обогнул меня и вошёл в дверь с табличкой \"Глав.Секретарь\"."," Я осталась в небольшом замешательстве, но более опаздывать намерена не была и побежала в сторону класса.\n",
  "\tАккуратно постучав, я нырнула в кабинет."," Конечно же, все взгляды устремились ко мне.\n", 
- "— Прошу прощения за опоздание, ","— преподаватель в лице стройной женщины лет пятидесяти развернулась в мою сторону."," Её очки спали на кончик носа, а длинные светлые волосы были убраны в сложную причёску."," Брови преподши нахмурились.\n",f"— {player['name']} Миллер, так?"," Мы тут не опаздываем в первый учебный день, знаешь ли,"," — учительница осмотрела класс и, найдя свободное место, указала мне рукой куда-то в сторону дальней стены,\n","— Садись к Келлеру."," Так, продолжим, ","— на доске начали появляться какие-то символы, а я направилась к единственному свободному месту."," Сегодня похоже все не в духе, хотелось бы узнать почему.\n",
+ "— Прошу прощения за опоздание, ","— преподаватель в лице стройной женщины лет пятидесяти развернулась в мою сторону."," Её очки спали на кончик носа, а длинные светлые волосы были убраны в сложную причёску."," Брови преподавателя нахмурились.\n",f"— {player['name']} Миллер, так?"," Мы тут не опаздываем в первый учебный день, знаешь ли,"," — учительница осмотрела класс и, найдя свободное место, указала мне рукой куда-то в сторону дальней стены,\n","— Садись к Келлеру."," Так, продолжим, ","— на доске начали появляться какие-то символы, а я направилась к единственному свободному месту."," Сегодня похоже все не в духе, хотелось бы узнать почему.\n",
  "\tЯ села за парту, быстро оценив парня, который и был по всей видимости Келлером."," Каштановые волосы средней длины были растрёпаны: концы вьющихся локонов торчали во все стороны."," Причёска чем-то напоминала маллет."," Тут Келлер посмотрел на меня в ответ хвойно-зелёными глазами, и я отвела взгляд.\n", 
  "\tМожно было наконец выдохнуть и собраться с мыслями."," Тема на доске уже мне знакома и было решено ничего не писать."," В голове возник парень из коридора, а я ведь так и не узнала его имя."," То есть он действительно сначала нагрубил мне, а потом любезно подсказал куда идти?"," Его будто переключило, прям как робот."," Он заходил к секретарю в учебное время — наверное староста или председатель очередного комитета, совета, клуба и так далее."," Выглядел парень дорого и опрятно, так что не удивлюсь, если он сын кого-то из администрации.\n", 
  "Я почувствовала, как Келлер сверлит меня глазами и обернулась."," Он озарил меня улыбкой во все тридцать два и протянул какую-то бумажку под партой."," Я быстро забрала кусочек тетради и раскрыла его.\n", 
@@ -79,7 +75,7 @@ def TxtBlock(Txt):
  "— А-ай, — вторую руку я приложила ко лбу и попыталась встать с трибуны, дабы отправиться к медсестре."," Объяснять Лекси, что это не Кастиэль виноват в ударе, сил не было."," Как-нибудь потом скажу.\n",
  "— Мисс Миллер, не вставайте пожалуйста, ","— учитель сказал это как раз вовремя, потому что попытка встать не увенчалась успехом, и я плюхнулась обратно на скамью."," Лекси оперативно достала из сумочки ватный диск и предложила его мне."," Когда это она в раздевалку сбегала?\n", 
  "\tЯ не стала отказываться и, скрутив диск в жгутик, поместила в нос."," Я сильно тормозила и чуть не испачкала грязной рукой джинсы, но Лекси вовремя дала мне влажные салфетки – я привела себя в относительный порядок."," Голова ужасно болела."," До конца урока ещё полчаса, может пройдёт?",
- "— Джойс, живо сюда! ","– злобно крикнул физрук на весь зал."," Парень и так шёл в нашу сторону, но после слов учителя его глаза закатились, и идти он продолжил с неохотой.\n", 
+ "\n— Джойс, живо сюда! ","– злобно крикнул физрук на весь зал."," Парень и так шёл в нашу сторону, но после слов учителя его глаза закатились, и идти он продолжил с неохотой.\n", 
  "—  Мне и так доложили о твоём сегодняшнем поведении."," Отведёшь мисс Миллер в медпункт, а в оставшееся от урока время проведёшь ей экскурсию по школе, ","— Кастиэль открыл было рот, чтобы возразить, но учитель остановил его рукой.\n",
  "— Эдвард сегодня занят, а ты в любом случае отстранён от занятий баскетболом на ближайшую неделю."," Понял меня? ","– Брови Джойса нахмурились.\n",
  "— Нет, не понял."," Это не от меня мяч прилетел, а от Клойда, ","— Кас указал в сторону ранее игравших парней.\n",
@@ -249,7 +245,7 @@ def TxtBlock(Txt):
  "— Конечно, но ты не должен был, ","— мне стало неловко, но Эдвард уже открывал мне дверь на пассажирское сидение, и я села в ягуар.\n", 
  "— У меня свои принципы, ","— парень завёл машину, и мы тронулись.\n",
  "— Пристегнись, ","— Нортвест усмехнулся и резко прибавил газу, заставив меня дёрнуться ","— я тут же послушно схватилась за ремень.",
- "— Ха-ха-ха, очень смешно, ","— саркастически ответила я и сложила руки на груди, сделав вид, что обиделась.\n",
+ "\n— Ха-ха-ха, очень смешно, ","— саркастически ответила я и сложила руки на груди, сделав вид, что обиделась.\n",
  "— Да ладно тебе."," Я не особо осторожный водитель, что б ты знала, ","— какое-то время мы ехали в тишине, но теперь я всё-таки решилась спросить про драку с Касом.\n",
  "— Что случилось у вас с Джойсом с утра?"," Если ты, конечно, не против рассказать, ","— я боялась его задеть, поэтому говорила намного тише, чуть ли не шёпотом.\n",
  "— Знаешь, тебе не стоит об этом переживать."," У нас с ним натянутые отношения уже около пяти лет."," Он любит лезть не в своё дело и, к тому же, хам и наглец, ","— я заметила, как костяшки его пальцев на руле побледнели."," Больная тема, однозначно.\n",
@@ -295,20 +291,19 @@ def TxtBlock(Txt):
  f"Поздравляем, {player['name']}!\nВы прошли демо-версию Forbidden Fruit!\n\nВозвращайтесь снова!"
  ]
 
-   global Amber
    while True:
-      if Txt<744:
-         if Txt==23:
+      if jsondict["Txt"]<743:
+         if jsondict["Txt"]==23:
             choice=str(input())
             match choice:
                case '1':
-                  Txt=Txt+1
+                  jsondict["Txt"]=jsondict["Txt"]+1
                case '2':
-                  Txt=Txt+1
+                  jsondict["Txt"]=jsondict["Txt"]+1
                case '3':
-                  Txt=Txt+1
+                  jsondict["Txt"]=jsondict["Txt"]+1
             choice=0
-         if Txt==31:
+         if jsondict["Txt"]==31:
             choice=str(input())
             match choice:
                case '1':
@@ -318,343 +313,345 @@ def TxtBlock(Txt):
                case '2':
                   DoYourBed()
                   print("\nТеперь нужно разобрать вещи")
-                  SortCloth
+                  SortCloth()
                case '3':
-                  Txt=Txt+1
+                  jsondict["Txt"]=jsondict["Txt"]+1
                   continue
             choice=0
-         if Txt==61:
+         if jsondict["Txt"]==61:
             choice=str(input())
             match choice:
                case '1':
-                  EdCom=EdCom+1
-                  Txt=Txt+1
+                  jsondict["Edvard"]=jsondict["Edvard"]+1
+                  jsondict["Txt"]=jsondict["Txt"]+1
                case '2':
-                  Txt=Txt+3
+                  jsondict["Txt"]=jsondict["Txt"]+3
             choice=0
-         if Txt==101:
+         if jsondict["Txt"]==101:
             choice=str(input())
             match choice:
                case '1':
-                  RyCom=RyCom+1
-                  while Txt<103:
+                  jsondict["Ryan"]=jsondict["Ryan"]+1
+                  while jsondict["Txt"]<103:
                      keyboard.wait('space','M')
-                     print(Block[Txt],end="")
-                     Txt=Txt+1
+                     print(Block[jsondict["Txt"]],end="")
+                     jsondict["Txt"]=jsondict["Txt"]+1
                   else:
-                     Txt=Txt+2
+                     jsondict["Txt"]=jsondict["Txt"]+2
                case '2':
-                  Txt=Txt+2
+                  jsondict["Txt"]=jsondict["Txt"]+2
             choice=0
-         if Txt==208:
+         if jsondict["Txt"]==208:
             choice=str(input())
             match choice:
                case '1':
-                  Amber=1
-                  RyCom=RyCom+1
-                  KasCom=KasCom+1
-                  while Txt<216:
+                  jsondict["Amber"]=True
+                  jsondict["Ryan"]=jsondict["Ryan"]+1
+                  jsondict["Kastiel"]=jsondict["Kastiel"]+1
+                  while jsondict["Txt"]<216:
                      keyboard.wait('space','M')
-                     print(Block[Txt],end="")
-                     Txt=Txt+1
+                     print(Block[jsondict["Txt"]],end="")
+                     jsondict["Txt"]=jsondict["Txt"]+1
                   else:
-                     Txt=Txt+2                  
+                     jsondict["Txt"]=jsondict["Txt"]+2                  
                case '2':
-                  Amber=2
-                  EdCom=EdCom-1
-                  Txt=Txt+8
+                  jsondict["Amber"]=False
+                  jsondict["Edvard"]=jsondict["Edvard"]-1
+                  jsondict["Txt"]=jsondict["Txt"]+8
             choice=0
-         if Txt==303:
-            if Amber==1:
-               while Txt!=312:
+         if jsondict["Txt"]==303:
+            if jsondict["Amber"]==True:
+               while jsondict["Txt"]!=312:
                   keyboard.wait('space','M')
-                  print(Block[Txt],end="")
-                  Txt=Txt+1
+                  print(Block[jsondict["Txt"]],end="")
+                  jsondict["Txt"]=jsondict["Txt"]+1
                else:
                   choice=str(input())
                   match choice:
                      case '1':
-                        KasCom=KasCom+1
-                        while Txt<376:
+                        jsondict["Kastiel"]=jsondict["Kastiel"]+1
+                        while jsondict["Txt"]<376:
                            keyboard.wait('space','M')
-                           print(Block[Txt],end="")
-                           Txt=Txt+1
+                           print(Block[jsondict["Txt"]],end="")
+                           jsondict["Txt"]=jsondict["Txt"]+1
                         else:
-                           Txt=Txt+155
+                           jsondict["Txt"]=jsondict["Txt"]+155
                      case '2':
                         choice=0
-                        KasCom=KasCom-2
-                        EdCom=EdCom+1
-                        Txt=Txt+64
-                        while Txt<523:
-                           if Txt==400:
+                        jsondict["Kastiel"]=jsondict["Kastiel"]-2
+                        jsondict["Edvard"]=jsondict["Edvard"]+1
+                        jsondict["Txt"]=jsondict["Txt"]+64
+                        while jsondict["Txt"]<523:
+                           if jsondict["Txt"]==400:
                               choice=str(input())
                               match choice:
                                  case '1':
-                                    RyCom=RyCom+1
-                                    while Txt<446:
+                                    jsondict["Ryan"]=jsondict["Ryan"]+1
+                                    while jsondict["Txt"]<446:
                                        keyboard.wait('space','M')
-                                       print(Block[Txt],end="")
-                                       Txt=Txt+1
+                                       print(Block[jsondict["Txt"]],end="")
+                                       jsondict["Txt"]=jsondict["Txt"]+1
                                     else:
-                                       Txt=Txt+85
+                                       jsondict["Txt"]=jsondict["Txt"]+85
                                  case '2':
-                                    EdCom=EdCom+1
-                                    Txt=Txt+46
-                                    while Txt<518:
+                                    jsondict["Edvard"]=jsondict["Edvard"]+1
+                                    jsondict["Txt"]=jsondict["Txt"]+46
+                                    while jsondict["Txt"]<518:
                                        keyboard.wait('space','M')
-                                       print(Block[Txt],end="")
-                                       Txt=Txt+1
+                                       print(Block[jsondict["Txt"]],end="")
+                                       jsondict["Txt"]=jsondict["Txt"]+1
                                     else: 
-                                       Txt=Txt+13
+                                       jsondict["Txt"]=jsondict["Txt"]+13
                               choice=0
                            keyboard.wait('space','M')
-                           print(Block[Txt],end="")
-                           Txt=Txt+1
+                           print(Block[jsondict["Txt"]],end="")
+                           jsondict["Txt"]=jsondict["Txt"]+1
                      case '3':
-                        Txt=Txt+206
-                        while Txt<525:
+                        jsondict["Txt"]=jsondict["Txt"]+206
+                        while jsondict["Txt"]<525:
                            keyboard.wait('space','M')
-                           print(Block[Txt],end="")
-                           Txt=Txt+1
+                           print(Block[jsondict["Txt"]],end="")
+                           jsondict["Txt"]=jsondict["Txt"]+1
                         else:
-                           Txt=394
-                           while Txt<523:
-                              if Txt==400:
+                           jsondict["Txt"]=394
+                           while jsondict["Txt"]<523:
+                              if jsondict["Txt"]==400:
                                  choice=str(input())
                                  match choice:
                                     case '1':
-                                       RyCom=RyCom+1
-                                       while Txt<446:
+                                       jsondict["Ryan"]=jsondict["Ryan"]+1
+                                       while jsondict["Txt"]<446:
                                           keyboard.wait('space','M')
-                                          print(Block[Txt],end="")
-                                          Txt=Txt+1
+                                          print(Block[jsondict["Txt"]],end="")
+                                          jsondict["Txt"]=jsondict["Txt"]+1
                                        else:
-                                          Txt=Txt+85
+                                          jsondict["Txt"]=jsondict["Txt"]+85
                                     case '2':
-                                       EdCom=EdCom+1
-                                       Txt=Txt+46
-                                       while Txt<518:
+                                       jsondict["Edvard"]=jsondict["Edvard"]+1
+                                       jsondict["Txt"]=jsondict["Txt"]+46
+                                       while jsondict["Txt"]<518:
                                           keyboard.wait('space','M')
-                                          print(Block[Txt],end="")
-                                          Txt=Txt+1
+                                          print(Block[jsondict["Txt"]],end="")
+                                          jsondict["Txt"]=jsondict["Txt"]+1
                                        else: 
-                                          Txt=Txt+13
+                                          jsondict["Txt"]=jsondict["Txt"]+13
                                  choice=0
                               keyboard.wait('space','M')
-                              print(Block[Txt],end="")
-                              Txt=Txt+1
-            if Amber==2:
+                              print(Block[jsondict["Txt"]],end="")
+                              jsondict["Txt"]=jsondict["Txt"]+1
+            if jsondict["Amber"]==False:
                choice=0
-               Txt=Txt+222
-               while Txt<526:
+               jsondict["Txt"]=jsondict["Txt"]+222
+               while jsondict["Txt"]<526:
                   keyboard.wait('space','M')
-                  print(Block[Txt],end="")
-                  Txt=Txt+1
+                  print(Block[jsondict["Txt"]],end="")
+                  jsondict["Txt"]=jsondict["Txt"]+1
                else:
                   choice=str(input())
                   match choice:
                      case '1':
                         choice=0
-                        KasCom=KasCom-2
-                        EdCom=EdCom+1
-                        Txt=Txt-149
-                        while Txt<523:
-                           if Txt==400:
+                        jsondict["Kastiel"]=jsondict["Kastiel"]-2
+                        jsondict["Edvard"]=jsondict["Edvard"]+1
+                        jsondict["Txt"]=jsondict["Txt"]-149
+                        while jsondict["Txt"]<523:
+                           if jsondict["Txt"]==400:
                               choice=str(input())
                               match choice:
                                  case '1':
-                                    RyCom=RyCom+1
-                                    while Txt<446:
+                                    jsondict["Ryan"]=jsondict["Ryan"]+1
+                                    while jsondict["Txt"]<446:
                                        keyboard.wait('space','M')
-                                       print(Block[Txt],end="")
-                                       Txt=Txt+1
+                                       print(Block[jsondict["Txt"]],end="")
+                                       jsondict["Txt"]=jsondict["Txt"]+1
                                     else:
-                                       Txt=Txt+85
+                                       jsondict["Txt"]=jsondict["Txt"]+85
                                  case '2':
-                                    EdCom=EdCom+1
-                                    Txt=Txt+46
-                                    while Txt<518:
+                                    jsondict["Edvard"]=jsondict["Edvard"]+1
+                                    jsondict["Txt"]=jsondict["Txt"]+46
+                                    while jsondict["Txt"]<518:
                                        keyboard.wait('space','M')
-                                       print(Block[Txt],end="")
-                                       Txt=Txt+1
+                                       print(Block[jsondict["Txt"]],end="")
+                                       jsondict["Txt"]=jsondict["Txt"]+1
                                     else: 
-                                       Txt=Txt+13
+                                       jsondict["Txt"]=jsondict["Txt"]+13
                               choice=0
                            keyboard.wait('space','M')
-                           print(Block[Txt],end="")
-                           Txt=Txt+1
+                           print(Block[jsondict["Txt"]],end="")
+                           jsondict["Txt"]=jsondict["Txt"]+1
                      case '2':
-                        KasCom=KasCom-1
-                        while Txt<531:
+                        jsondict["Kastiel"]=jsondict["Kastiel"]-1
+                        while jsondict["Txt"]<531:
                            keyboard.wait('space','M')
-                           print(Block[Txt],end="")
-                           Txt=Txt+1
-                        Txt=390
-                        while Txt<400:
+                           print(Block[jsondict["Txt"]],end="")
+                           jsondict["Txt"]=jsondict["Txt"]+1
+                        jsondict["Txt"]=390
+                        while jsondict["Txt"]<400:
                            keyboard.wait('space','M')
-                           print(Block[Txt],end="")
-                           Txt=Txt+1
+                           print(Block[jsondict["Txt"]],end="")
+                           jsondict["Txt"]=jsondict["Txt"]+1
                         else:
-                           while Txt<523:
-                              if Txt==400:
+                           while jsondict["Txt"]<523:
+                              if jsondict["Txt"]==400:
                                  choice=str(input())
                                  match choice:
                                     case '1':
-                                       RyCom=RyCom+1
-                                       while Txt<446:
+                                       jsondict["Ryan"]=jsondict["Ryan"]+1
+                                       while jsondict["Txt"]<446:
                                           keyboard.wait('space','M')
-                                          print(Block[Txt],end="")
-                                          Txt=Txt+1
+                                          print(Block[jsondict["Txt"]],end="")
+                                          jsondict["Txt"]=jsondict["Txt"]+1
                                        else:
-                                          Txt=Txt+85
+                                          jsondict["Txt"]=jsondict["Txt"]+85
                                     case '2':
-                                       EdCom=EdCom+1
-                                       Txt=Txt+46
-                                       while Txt<518:
+                                       jsondict["Edvard"]=jsondict["Edvard"]+1
+                                       jsondict["Txt"]=jsondict["Txt"]+46
+                                       while jsondict["Txt"]<518:
                                           keyboard.wait('space','M')
-                                          print(Block[Txt],end="")
-                                          Txt=Txt+1
+                                          print(Block[jsondict["Txt"]],end="")
+                                          jsondict["Txt"]=jsondict["Txt"]+1
                                        else: 
-                                          Txt=Txt+13
+                                          jsondict["Txt"]=jsondict["Txt"]+13
                                  choice=0
                            keyboard.wait('space','M')
-                           print(Block[Txt],end="")
-                           Txt=Txt+1
+                           print(Block[jsondict["Txt"]],end="")
+                           jsondict["Txt"]=jsondict["Txt"]+1
                      case '3':
-                        Txt=518
-                        while Txt<525:
+                        jsondict["Txt"]=518
+                        while jsondict["Txt"]<525:
                            keyboard.wait('space','M')
-                           print(Block[Txt],end="")
-                           Txt=Txt+1
+                           print(Block[jsondict["Txt"]],end="")
+                           jsondict["Txt"]=jsondict["Txt"]+1
                         else:
-                           Txt=394
-                           while Txt<523:
-                              if Txt==400:
+                           jsondict["Txt"]=394
+                           while jsondict["Txt"]<523:
+                              if jsondict["Txt"]==400:
                                  choice=str(input())
                                  match choice:
                                     case '1':
-                                       RyCom=RyCom+1
-                                       while Txt<446:
+                                       jsondict["Ryan"]=jsondict["Ryan"]+1
+                                       while jsondict["Txt"]<446:
                                           keyboard.wait('space','M')
-                                          print(Block[Txt],end="")
-                                          Txt=Txt+1
+                                          print(Block[jsondict["Txt"]],end="")
+                                          jsondict["Txt"]=jsondict["Txt"]+1
                                        else:
-                                          Txt=Txt+85
+                                          jsondict["Txt"]=jsondict["Txt"]+85
                                     case '2':
-                                       EdCom=EdCom+1
-                                       Txt=Txt+46
-                                       while Txt<518:
+                                       jsondict["Edvard"]=jsondict["Edvard"]+1
+                                       jsondict["Txt"]=jsondict["Txt"]+46
+                                       while jsondict["Txt"]<518:
                                           keyboard.wait('space','M')
-                                          print(Block[Txt],end="")
-                                          Txt=Txt+1
+                                          print(Block[jsondict["Txt"]],end="")
+                                          jsondict["Txt"]=jsondict["Txt"]+1
                                        else: 
-                                          Txt=Txt+13
+                                          jsondict["Txt"]=jsondict["Txt"]+13
                                  choice=0
                               keyboard.wait('space','M')
-                              print(Block[Txt],end="")
-                              Txt=Txt+1
-         if Txt>=552:
-            if RyCom>=2:
+                              print(Block[jsondict["Txt"]],end="")
+                              jsondict["Txt"]=jsondict["Txt"]+1
+         if jsondict["Txt"]>=552:
+            if jsondict["Ryan"]>=2:
                choice=0
-               while Txt<559:
+               while jsondict["Txt"]<559:
                   keyboard.wait('space','M')
-                  print(Block[Txt],end="")
-                  Txt=Txt+1
+                  print(Block[jsondict["Txt"]],end="")
+                  jsondict["Txt"]=jsondict["Txt"]+1
                choice=str(input())
                match choice:
                   case '1':
-                     while Txt<=589:
+                     while jsondict["Txt"]<=589:
                         keyboard.wait('space','M')
-                        print(Block[Txt],end="")
-                        Txt=Txt+1
+                        print(Block[jsondict["Txt"]],end="")
+                        jsondict["Txt"]=jsondict["Txt"]+1
                      print(Block[-1])
+                     CSVsave()
                      exit()
                   case '2':
-                     Txt=590
-                     while Txt<=594:
+                     jsondict["Txt"]=590
+                     while jsondict["Txt"]<=594:
                         keyboard.wait('space','M')
-                        print(Block[Txt],end="")
-                        Txt=Txt+1  
-                     if (KasCom<2) and (EdCom<2):
-                        Txt=736      
-            if KasCom>=2:
-               Txt=595
+                        print(Block[jsondict["Txt"]],end="")
+                        jsondict["Txt"]=jsondict["Txt"]+1  
+                     if (jsondict["Kastiel"]<2) and (jsondict["Edvard"]<2):
+                        jsondict["Txt"]=736      
+            if jsondict["Kastiel"]>=2:
+               jsondict["Txt"]=595
                choice=0
-               while Txt<601:
+               while jsondict["Txt"]<601:
                   keyboard.wait('space','M')
-                  print(Block[Txt],end="")
-                  Txt=Txt+1
+                  print(Block[jsondict["Txt"]],end="")
+                  jsondict["Txt"]=jsondict["Txt"]+1
                choice=str(input())
                match choice:
                   case '1':
-                     while Txt<=631:
+                     while jsondict["Txt"]<=631:
                         keyboard.wait('space','M')
-                        print(Block[Txt],end="")
-                        Txt=Txt+1
+                        print(Block[jsondict["Txt"]],end="")
+                        jsondict["Txt"]=jsondict["Txt"]+1
                      print(Block[-1])
+                     CSVsave()
                      exit()
                   case '2':
-                     Txt=632
-                     while Txt<=633:
+                     jsondict["Txt"]=632
+                     while jsondict["Txt"]<=633:
                         keyboard.wait('space','M')
-                        print(Block[Txt],end="")
-                        Txt=Txt+1
-                     if EdCom<2:
-                        Txt=736
-            if EdCom>=2:
-               Txt=634
+                        print(Block[jsondict["Txt"]],end="")
+                        jsondict["Txt"]=jsondict["Txt"]+1
+                     if jsondict["Edvard"]<2:
+                        jsondict["Txt"]=736
+            if jsondict["Edvard"]>=2:
+               jsondict["Txt"]=634
                choice=0
-               while Txt<648:
+               while jsondict["Txt"]<648:
                   keyboard.wait('space','M')
-                  print(Block[Txt],end="")
-                  Txt=Txt+1
+                  print(Block[jsondict["Txt"]],end="")
+                  jsondict["Txt"]=jsondict["Txt"]+1
                choice=str(input())
                match choice:
                   case '1':
-                     while Txt<=733:
-                        if Txt==697:
-                           if Amber==1:
-                              while Txt<710:
+                     while jsondict["Txt"]<=733:
+                        if jsondict["Txt"]==697:
+                           if jsondict["Amber"]==True:
+                              while jsondict["Txt"]<710:
                                  keyboard.wait('space','M')
-                                 print(Block[Txt],end="")
-                                 Txt=Txt+1
-                              Txt=724
-                           if Amber==2:
-                              Txt=710
+                                 print(Block[jsondict["Txt"]],end="")
+                                 jsondict["Txt"]=jsondict["Txt"]+1
+                              jsondict["Txt"]=724
+                           if jsondict["Amber"]==False:
+                              jsondict["Txt"]=710
                         keyboard.wait('space','M')
-                        print(Block[Txt],end="")
-                        Txt=Txt+1
+                        print(Block[jsondict["Txt"]],end="")
+                        jsondict["Txt"]=jsondict["Txt"]+1
                      print(Block[-1])
+                     CSVsave()
                      exit()
                   case '2':
-                     Txt=734
-                     while Txt<=735:
+                     jsondict["Txt"]=734
+                     while jsondict["Txt"]<=735:
                         keyboard.wait('space','M')
-                        print(Block[Txt],end="")
-                        Txt=Txt+1
-                     Txt=736
-            if Txt==736:
-               while Txt<=743:
+                        print(Block[jsondict["Txt"]],end="")
+                        jsondict["Txt"]=jsondict["Txt"]+1
+                     jsondict["Txt"]=736
+            if jsondict["Txt"]==736:
+               while jsondict["Txt"]<=743:
                   keyboard.wait('space','M')
                   print(Block  ,end="")
-                  Txt=Txt+1
+                  jsondict["Txt"]=jsondict["Txt"]+1
                print(Block[-1])
+               CSVsave()
                exit()
-            if (RyCom<2) and (KasCom<2) and (EdCom<2):
-               Txt=737
-               while Txt<=743:
+            if (jsondict["Ryan"]<2) and (jsondict["Kastiel"]<2) and (jsondict["Edvard"]<2):
+               jsondict["Txt"]=737
+               while jsondict["Txt"]<=743:
                   keyboard.wait('space','M')
-                  print(Block[Txt],end="")
-                  Txt=Txt+1
+                  print(Block[jsondict["Txt"]],end="")
+                  jsondict["Txt"]=jsondict["Txt"]+1
                print(Block[-1])
+               CSVsave()
                exit()
          keyboard.wait('space','M')
-         print(Block[Txt],end="")
-         Txt=Txt+1
-      else:
-       print("end")
-       break
+         print(Block[jsondict["Txt"]],end="")
+         jsondict["Txt"]=jsondict["Txt"]+1
 
 def DoYourBed():
     print("\n\tМини-игра \"Застели постель\"\nПравила: выбери комплект белья и собери подходящие предметы.")
@@ -865,13 +862,13 @@ def Zodiac():
          player["zod"]="Рак"
       case '5':
          RyZod = 1
-         player["zod"]="Овен"
+         player["zod"]="Лев"
       case '6':
          KasZod = 1
          player["zod"]="Дева"
       case '7':
          RyZod = 1
-         player["zod"]="Овен"
+         player["zod"]="Весы"
       case '8':
          EdZod = 1
          player["zod"]="Скорпион"
@@ -883,57 +880,96 @@ def Zodiac():
          player["zod"]="Козерог"
       case '11':
          RyZod = 1
-         player["zod"]="Овен"
+         player["zod"]="Водолей"
       case '12':
          KasZod = 1
          player["zod"]="Рыбы"
+
+def CSVsave():
+   global jsondict
+   global player
+   csvdict = {'Player': player['name'], 'Zodiac_sign': player['zod'], 'Style': player['aes'],'Kastiel_points': jsondict['Kastiel'],'Edvard_points': jsondict['Edvard'],'Ryan_points':jsondict['Ryan'],'Amber_flag': jsondict['Amber']}
+   with open ('players.csv', 'a', newline='') as CSVfile:
+      fieldnames = ['Player','Zodiac_sign','Style','Kastiel_points','Edvard_points','Ryan_points','Amber_flag']
+      csvwriter = csv.DictWriter(CSVfile, fieldnames=fieldnames, delimiter=';')
+      csvwriter.writeheader()
+      csvwriter.writerow(csvdict)
+
+def Save():
+   SaveChoice = str(input("Выберете слот сохранения:\n1. Слот 1\n2. Слот 2\n3. Слот 3\n"))
+   match SaveChoice:
+      case '1':
+         with open ('Save1.json', 'w') as Save1File:
+            json.dump(jsondict, Save1File, indent=4)
+         print("Прогресс сохранён\n\n")
+      case '2':
+         with open ('Save2.json', 'w') as Save2File:
+            json.dump(jsondict, Save2File, indent=4)
+         print("Прогресс сохранён\n\n")
+      case '3':
+         with open ('Save3.json', 'w') as Save3File:
+            json.dump(jsondict, Save3File, indent=4)
+         print("Прогресс сохранён\n\n")
+
+def Load():
+   global jsondict
+   LoadChoice = str(input("Выберете слот для загрузки:\n1. Слот 1\n2. Слот 2\n3. Слот 3\n\n"))
+   match LoadChoice:
+      case '1':
+           with open ('Save1.json', 'r') as Save1File:
+               jsondict = json.load(Save1File)
+      case '2':
+            with open ('Save2.json', 'r') as Save2File:
+               jsondict = json.load(Save2File)
+      case '3':
+          with open ('Save3.json', 'r') as Save3File:
+               jsondict = json.load(Save3File)
+
+def DelAllSaves():
+   global jsondict0
+   with open ('Save1.json', 'w') as Save1File:
+       json.dump(jsondict0, Save1File, indent=4)
+   with open ('Save1.json', 'w') as Save2File:
+       json.dump(jsondict0, Save2File, indent=4)
+   with open ('Save1.json', 'w') as Save3File:
+       json.dump(jsondict0, Save3File, indent=4)
+def DelOneSave():
+   global jsondict0
+   DelSaveChoice = str(input("\nВыберете слот для очистки:\n1. Слот 1\n2. Слот 2\n3. Слот 3\n"))
+   match DelSaveChoice:
+      case '1':
+            with open ('Save1.json', 'w') as Save1File:
+                json.dump(jsondict0, Save1File, indent=4)
+            print("Слот 1 теперь пуст")
+      case '2':
+            with open ('Save1.json', 'w') as Save2File:
+               json.dump(jsondict0, Save2File, indent=4)
+            print("Слот 2 теперь пуст")
+      case '3':
+            with open ('Save1.json', 'w') as Save3File:
+               json.dump(jsondict0, Save3File, indent=4)
+            print("Слот 3 теперь пуст")
+def SaveLoadMenu():
+   global jsondict
+   SLMenuChoice = str(input(f"\nЧто вы хотите сделать?\n1. Сохраниться\n2. Загрузиться\n3. Очистить сохранение\n"))
+   match SLMenuChoice:
+      case '1':
+         Save()
+      case '2':
+         Load()
+      case '3':
+         DelSavesChoice = str(input(f"\nУдалить все сохранения?\n1. Да\n2. Нет\n"))
+         match DelSavesChoice:
+            case '1':
+               DelAllSaves()
+            case '2':
+               DelOneSave()
 def Menu():
-   global KasZod
-   global KasAes
-   global EdZod
-   global EdAes
-   global RyZod
-   global RyAes
-   global KasCom
-   global RyCom
-   global EdCom
-   global Txt
-   global Block
-   a=0
-   MenuChoice=str(input(f"\n\nПриветствую, {player['name']}\nЧто вы хотите сделать?\n1. Заполнить анкету заново (Временно не работает)\n2. Открыть статистику(Это читерство!)\n3. Посмотреть анкеты персонажей (Содержит спойлеры0\n4. Выйти из меню\n"))
+   MenuChoice=str(input(f"\n\nПриветствую, {player['name']}\nМеню:\n1. Сохранения\n2. Статистику(Это читерство!)\n3. Анкеты персонажей (Содержит спойлеры0\n4. Выйти из меню\n"))
    if MenuChoice.isdigit():
       match MenuChoice:
          case '1':
-               KasZod=0
-               KasAes=0
-               KasCom=0
-               EdCom=0
-               RyCom=0
-               EdZod=0
-               EdAes=0
-               RyZod=0
-               RyAes=0
-               Txt=0
-               print("\nForbidden Fruit\n\nПриветствую, Игрок!\n~Перед началом этой увлекательной истории заполните свою анкету~\n\nДля редактирования анкеты, просмотра статистики и просмотра анкет персонажей нажмите M\n")
-               playername=str(input("Введите имя героини:")).title()
-               while a!=1:
-                  if playername.isalpha():
-                     player["name"]=playername
-                     if playername[-1]=='я':
-                        b='ю'
-                     else:
-                        b='у'
-                     player["nameform"]=playername[:-1]+b
-                     a=1
-                  else:
-                     playername=str(input("Имя должно содеражть только буквы\nВведите имя:")).title()
-               Zodiac()
-               Aesthetics()
-               print("\nТеперь начинается ваша история! Нажимайте Space чтобы читать\n")
-               keyboard.add_hotkey('M', Menu)
-               keyboard.add_hotkey('space', lambda: print(Block[Txt],end=""))
-               Block=BlockDef
-               TxtBlock(Txt)
+            SaveLoadMenu()
          case '2':
             Statistics()
          case '3':
@@ -942,10 +978,8 @@ def Menu():
             print("Пока!")
 
 def Statistics():
-   global KasCom
-   global EdCom
-   global RyCom
-   print(f"\nВаше имя: {player['name']},{player['nameform']}\nВаш знак зодиака: {player['zod']}\nВаш стиль: {player['aes']}\nОтношения:\nРайан: {RyCom}б.\nКастиэль: {KasCom}б.\nЭдвард: {EdCom}б.\n")
+   global jsondict
+   print(f"\nВаше имя: {player['name']},{player['nameform']}\nВаш знак зодиака: {player['zod']}\nВаш стиль: {player['aes']}\nОтношения:\nРайан: {jsondict['Ryan']}б.\nКастиэль: {jsondict['Kastiel']}б.\nЭдвард: {jsondict['Edvard']}б.\n")
 
 def Information():
    print(f"\n\t\x1B[1mКастиэль Джойс\x1B[0m\n\x1B[1mРост:\x1B[0m 188см\n\x1B[1mВес:\x1B[0m 80кг\n\x1B[1mЗнак зодиака:\x1B[0m скорпион\n\x1B[1mТип личности:\x1B[0m ENTP\n\x1B[1mЛюбит:\x1B[0m собак, хорроры, Новый Год\n\x1B[1mНе любит:\x1B[0m бумажную работу, футбол, зануд\n\n\t\x1B[1mЭдвард Нортвест\x1B[0m\n\x1B[1mРост:\x1B[0m 187см\n\x1B[1mВес:\x1B[0m 83кг\n\x1B[1mЗнак зодиака:\x1B[0m дева\n\x1B[1mТип личности:\x1B[0m ISFJ\n\x1B[1mЛюбит:\x1B[0m кошек, снег, чужие дни рождения\n\x1B[1mНе любит:\x1B[0m химию, грязь, объяснять несколько раз\n\n\t\x1B[1mРайан Келлер:\x1B[0m\n\x1B[1mРост:\x1B[0m 201см\n\x1B[1mВес:\x1B[0m 96кг\n\x1B[1mЗнак зодиака:\x1B[0m близнецы\n\x1B[1mТип личности:\x1B[0m ESFP\n\x1B[1mЛюбит:\x1B[0m комиксы, баскетбол, День Благодарения\n\x1B[1mНе любит:\x1B[0m физику, холод, задир\n")
@@ -968,6 +1002,12 @@ while a!=1:
       playername=str(input("Имя должно содеражть только буквы\nВведите имя:")).title()
 Zodiac()
 Aesthetics()
-print("\nТеперь начинается ваша история! Нажимайте Space чтобы читать\n")
+with open ('Save1.json', 'w') as Save1File:
+   json.dump(jsondict0, Save1File, indent=4)
+with open ('Save2.json', 'w') as Save2File:
+   json.dump(jsondict0, Save2File, indent=4)
+with open ('Save3.json', 'w') as Save3File:
+   json.dump(jsondict0, Save3File, indent=4)
+print("\nТеперь начинается ваша история! Нажимайте Space чтобы читать\n")  
 keyboard.add_hotkey('M', Menu)
-TxtBlock(Txt)
+TxtBlock()

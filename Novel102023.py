@@ -308,12 +308,8 @@ def TxtBlock():
             match choice:
                case '1':
                   SortCloth()
-                  print("\nТеперь нужно застелить постель")
-                  DoYourBed()
                case '2':
                   DoYourBed()
-                  print("\nТеперь нужно разобрать вещи")
-                  SortCloth()
                case '3':
                   jsondict["Txt"]=jsondict["Txt"]+1
                   continue
@@ -844,7 +840,7 @@ def Zodiac():
    while a!=1:
       if playerzod.isdigit():
          player["zod"]=playerzod
-         a=1
+         a = 1
       else:
          playerzod=str(input("Выбор должен содеражть только цифры от 1 до 12\nВыберете знак зодиака:"))
    match playerzod:
@@ -889,11 +885,16 @@ def CSVsave():
    global jsondict
    global player
    csvdict = {'Player': player['name'], 'Zodiac_sign': player['zod'], 'Style': player['aes'],'Kastiel_points': jsondict['Kastiel'],'Edvard_points': jsondict['Edvard'],'Ryan_points':jsondict['Ryan'],'Amber_flag': jsondict['Amber']}
-   with open ('players.csv', 'a', newline='') as CSVfile:
-      fieldnames = ['Player','Zodiac_sign','Style','Kastiel_points','Edvard_points','Ryan_points','Amber_flag']
-      csvwriter = csv.DictWriter(CSVfile, fieldnames=fieldnames, delimiter=';')
-      csvwriter.writeheader()
-      csvwriter.writerow(csvdict)
+   fieldnames = ['Player','Zodiac_sign','Style','Kastiel_points','Edvard_points','Ryan_points','Amber_flag']
+   if fieldnames[0] in open('players.csv').read():
+      with open ('players.csv', 'a', newline='') as CSVfile:
+         csvwriter = csv.DictWriter(CSVfile, fieldnames=fieldnames, delimiter=';')
+         csvwriter.writerow(csvdict)
+   else:
+      with open ('players.csv', 'a', newline='') as CSVfile:
+         csvwriter = csv.DictWriter(CSVfile, fieldnames=fieldnames, delimiter=';')
+         csvwriter.writeheader()
+         csvwriter.writerow(csvdict)
 
 def Save():
    SaveChoice = str(input("Выберете слот сохранения:\n1. Слот 1\n2. Слот 2\n3. Слот 3\n"))
@@ -965,7 +966,7 @@ def SaveLoadMenu():
             case '2':
                DelOneSave()
 def Menu():
-   MenuChoice=str(input(f"\n\nПриветствую, {player['name']}\nМеню:\n1. Сохранения\n2. Статистику(Это читерство!)\n3. Анкеты персонажей (Содержит спойлеры0\n4. Выйти из меню\n"))
+   MenuChoice=str(input(f"\n\nПриветствую, {player['name']}\nМеню:\n1. Сохранения\n2. Статистика(Это читерство!)\n3. Анкеты персонажей (Содержит спойлеры0\n4. Выйти из меню\n"))
    if MenuChoice.isdigit():
       match MenuChoice:
          case '1':
@@ -984,7 +985,7 @@ def Statistics():
 def Information():
    print(f"\n\t\x1B[1mКастиэль Джойс\x1B[0m\n\x1B[1mРост:\x1B[0m 188см\n\x1B[1mВес:\x1B[0m 80кг\n\x1B[1mЗнак зодиака:\x1B[0m скорпион\n\x1B[1mТип личности:\x1B[0m ENTP\n\x1B[1mЛюбит:\x1B[0m собак, хорроры, Новый Год\n\x1B[1mНе любит:\x1B[0m бумажную работу, футбол, зануд\n\n\t\x1B[1mЭдвард Нортвест\x1B[0m\n\x1B[1mРост:\x1B[0m 187см\n\x1B[1mВес:\x1B[0m 83кг\n\x1B[1mЗнак зодиака:\x1B[0m дева\n\x1B[1mТип личности:\x1B[0m ISFJ\n\x1B[1mЛюбит:\x1B[0m кошек, снег, чужие дни рождения\n\x1B[1mНе любит:\x1B[0m химию, грязь, объяснять несколько раз\n\n\t\x1B[1mРайан Келлер:\x1B[0m\n\x1B[1mРост:\x1B[0m 201см\n\x1B[1mВес:\x1B[0m 96кг\n\x1B[1mЗнак зодиака:\x1B[0m близнецы\n\x1B[1mТип личности:\x1B[0m ESFP\n\x1B[1mЛюбит:\x1B[0m комиксы, баскетбол, День Благодарения\n\x1B[1mНе любит:\x1B[0m физику, холод, задир\n")
 
-print("\nForbidden Fruit\n\nПриветствую, Игрок!\n~Перед началом этой увлекательной истории заполните свою анкету~\n\nДля редактирования анкеты, просмотра статистики и просмотра анкет персонажей нажмите M\n")
+print("\nForbidden Fruit\n\nПриветствую, Игрок!\n~Перед началом этой увлекательной истории заполните свою анкету~\n\nДля сохранения, редактирования анкеты, просмотра статистики и просмотра анкет персонажей нажмите M\n")
 playername=str(input("Введите имя героини:")).title()
 while a!=1:
    if playername.isalpha():

@@ -12,7 +12,19 @@ class User(Database):
         cursor.execute(select_id_user, (user_login))
         user_id = cursor.fetchone()
         return user_id
-
+    
+    def CheckUserExist(user_id):
+        conn = sqlite3.connect('RecordStudio.db')
+        cursor = conn.cursor()
+        try:
+            select_order_exist = "SELECT Id_User FROM users WHERE Id_User = ?"
+            cursor.execute(select_order_exist, (user_id,))
+            ifid = cursor.fetchone()
+            return ifid
+        except sqlite3.Error as e:
+            print(f"Error: {e}")
+            conn.rollback()
+            
     def INSERT_User(user_login, user_password, user_role):
         conn = sqlite3.connect('RecordStudio.db')
         cursor = conn.cursor()

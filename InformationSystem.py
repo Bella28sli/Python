@@ -22,6 +22,7 @@ choice = str
 smth_to_lookup = str
 mail_to_lookup = str
 order_to_lookup = str
+employee_to_lookup = str
 def CHOOSE_ROLE(user_login):
     conn = sqlite3.connect('RecordStudio.db')
     cursor = conn.cursor()
@@ -189,6 +190,16 @@ def CheckOrderExist():
         order_to_lookup = IFId()
         select_order_exist = "SELECT Id_Orders FROM orders WHERE Id_Orders = ?"
         cursor.execute(select_order_exist, (order_to_lookup,))
+        ifid = cursor.fetchone()
+        return ifid
+    except sqlite3.Error as e:
+        print(f"Error: {e}")
+        conn.rollback()
+def CheckEmployeeExist():
+    try:
+        employee_to_lookup = IFId()
+        select_employee_exist = "SELECT Id_Employee FROM staff WHERE Id_Employee = ?"
+        cursor.execute(select_employee_exist, (employee_to_lookup,))
         ifid = cursor.fetchone()
         return ifid
     except sqlite3.Error as e:
@@ -615,7 +626,46 @@ def ChangeOrders(user_login):
     elif (choice == '5'):
         AdminInterface(user_login)
 def ChangeStaff(user_login):
-    pass
+
+    print("\nЧто вы хотите сделать?\n1. Просмотреть сотрудников\n2. Редактировать сотрудника\n3. Добавить сотрудника\n4. Удалить сотрудника\n5. Вернуться в меню")
+    choice = IFChoice5()
+    if (choice == '1'):
+        Employee.SELECT_Staff()
+        ChangeStaff(user_login)
+    if (choice =='2'):
+        employee_id = CheckEmployeeExist()
+        if employee_id:
+            print("Что отредактировать?\n1. Имя\n2. Фамилию\n3. Зарплату\n4. Аккаунт")
+            choice = IFChoice4()
+            if (choice == '1'):
+                Employee.UPDATE_Staff_Name(employee_id, IFName())
+                ChangeStaff(user_login)
+            elif (choice == '2'):
+                Employee.UPDATE_Staff_Surname(employee_id, IFSurname())
+                ChangeStaff(user_login)
+            elif (choice == '3'):
+                Employee.UPDATE_Staff_Salary(employee_id, IFSalary())
+                ChangeStaff(user_login)
+            elif (choice == '4'):
+                Employee.UPDATE_Staff_User(employee_id, IFId())
+                ChangeStaff(user_login)
+        else:
+            print("Такого сотрудника не существует")
+            ChangeStaff(user_login)
+    elif (choice == '3'):
+        Employee.INSERT_Staff(IFName(), IFSurname(), IFSalary(), IFId())
+        ChangeOrders(user_login)
+    elif (choice == '4'):
+        order_id = CheckOrderExist()
+        if order_id:
+            Admin.DELETE_Order(order_id)
+            ChangeProducts(user_login)
+        else:
+            print("Такого заказа не существует")
+            ChangeOrders(user_login)
+        ChangeOrders(user_login)
+    elif (choice == '5'):
+        AdminInterface(user_login)
 def ChangeUsers(user_login):
     pass
 EnterFirst()

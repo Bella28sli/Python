@@ -23,6 +23,7 @@ smth_to_lookup = str
 mail_to_lookup = str
 order_to_lookup = str
 employee_to_lookup = str
+user_to_lookup = str
 def CHOOSE_ROLE(user_login):
     conn = sqlite3.connect('RecordStudio.db')
     cursor = conn.cursor()
@@ -198,8 +199,18 @@ def CheckOrderExist():
 def CheckEmployeeExist():
     try:
         employee_to_lookup = IFId()
-        select_employee_exist = "SELECT Id_Employee FROM staff WHERE Id_Employee = ?"
+        select_employee_exist = "SELECT Id_Staff FROM staff WHERE Id_Staff = ?"
         cursor.execute(select_employee_exist, (employee_to_lookup,))
+        ifid = cursor.fetchone()
+        return ifid
+    except sqlite3.Error as e:
+        print(f"Error: {e}")
+        conn.rollback()
+def CheckUserExist():
+    try:
+        user_to_lookup = IFId()
+        select_user_exist = "SELECT Id_User FROM users WHERE Id_User = ?"
+        cursor.execute(select_user_exist, (user_to_lookup,))
         ifid = cursor.fetchone()
         return ifid
     except sqlite3.Error as e:
@@ -626,7 +637,6 @@ def ChangeOrders(user_login):
     elif (choice == '5'):
         AdminInterface(user_login)
 def ChangeStaff(user_login):
-
     print("\nЧто вы хотите сделать?\n1. Просмотреть сотрудников\n2. Редактировать сотрудника\n3. Добавить сотрудника\n4. Удалить сотрудника\n5. Вернуться в меню")
     choice = IFChoice5()
     if (choice == '1'):
@@ -654,18 +664,75 @@ def ChangeStaff(user_login):
             ChangeStaff(user_login)
     elif (choice == '3'):
         Employee.INSERT_Staff(IFName(), IFSurname(), IFSalary(), IFId())
-        ChangeOrders(user_login)
+        ChangeStaff(user_login)
     elif (choice == '4'):
-        order_id = CheckOrderExist()
-        if order_id:
-            Admin.DELETE_Order(order_id)
-            ChangeProducts(user_login)
+        employee_id = CheckEmployeeExist()
+        if employee_id:
+            Employee.DELETE_Staff(employee_id)
+            ChangeStaff(user_login)
         else:
-            print("Такого заказа не существует")
-            ChangeOrders(user_login)
+            print("Такого сотрудника не существует")
+            ChangeStaff(user_login)
         ChangeOrders(user_login)
     elif (choice == '5'):
         AdminInterface(user_login)
 def ChangeUsers(user_login):
-    pass
+    print("\nЧто вы хотите сделать?\n1. Просмотреть пользователей\n2. Редактировать пользователя\n3. Добавить пользователя\n4. Удалить пользователя\n5. Вернуться в меню")
+    choice = IFChoice5()
+    if (choice == '1'):
+        User.SELECT_User()
+        ChangeUsers(user_login)
+    if (choice =='2'):
+        user_id = CheckUserExist()
+        if user_id:
+            print("Что отредактировать?\n1. Логин\n2. Пароль\n3. Роль\n4. Выйти")
+            choice = IFChoice4()
+            if (choice == '1'):
+                User.UPDATE_User_Login(user_id, IFLogin())
+                ChangeUsers(user_login)
+            elif (choice == '2'):
+                User.UPDATE_User_Password(user_id, IFPassword())
+                ChangeUsers(user_login)
+            elif (choice == '3'):
+                print("Новая роль?\n1. Юзер\n2. Клиент\n3. Сотрудник\n4. Админ")
+                choice = IFChoice4()
+                if (choice =='1'):
+                    user_role = 'User'
+                if (choice =='2'):
+                    user_role = 'Client'
+                if (choice =='3'):
+                    user_role = 'Employee'
+                if (choice =='4'):
+                    user_role = 'Admin'
+                User.UPDATE_User_Role(user_id, user_role)
+                ChangeUsers(user_login)
+            elif (choice == '4'):
+                ChangeUsers(user_login)
+        else:
+            print("Такого пользователя не существует")
+            ChangeUsers(user_login)
+    elif (choice == '3'):
+        print("Роль пользователя?\n1. Юзер\n2. Клиент\n3. Сотрудник\n4. Админ")
+        choice = IFChoice4()
+        if (choice =='1'):
+            user_role = 'User'
+        if (choice =='2'):
+            user_role = 'Client'
+        if (choice =='3'):
+            user_role = 'Employee'
+        if (choice =='4'):
+            user_role = 'Admin'
+        User.INSERT_User(IFLogin(), IFPassword(), user_role)
+        ChangeUsers(user_login)
+    elif (choice == '4'):
+        user_id = CheckUserExist()
+        if user_id:
+            User.IF_DELETE_User(user_id)
+            ChangeUsers(user_login)
+        else:
+            print("Такого пользователя не существует")
+            ChangeUsers(user_login)
+        ChangeUsers(user_login)
+    elif (choice == '5'):
+        AdminInterface(user_login)
 EnterFirst()

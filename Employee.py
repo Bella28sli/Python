@@ -54,7 +54,7 @@ class Employee(User):
         employee_salary = ifsalary
         upd_salary_query = "UPDATE staff SET Salary = ? WHERE Id_User = ?"
         try:
-            cursor.execute(upd_salary_query, (employee_salary, user_id))
+            cursor.execute(upd_salary_query, (employee_salary, user_id[0]))
             conn.commit()
             print("Зарплата изменена")
         except sqlite3.Error as e:
@@ -65,18 +65,18 @@ class Employee(User):
         cursor = conn.cursor()
         upd_name_query = "UPDATE staff SET Name = ? WHERE Id_Staff = ?"
         try:
-            cursor.execute(upd_name_query, (ifname, employee_id))
+            cursor.execute(upd_name_query, (ifname, employee_id[0]))
             conn.commit()
             print("Имя изменено")
         except sqlite3.Error as e:
             print(f"Error: {e}")
             conn.rollback()
-    def UPDATE_Staff_Surame(employee_id, ifsurname):
+    def UPDATE_Staff_Surname(employee_id, ifsurname):
         conn = sqlite3.connect('RecordStudio.db')
         cursor = conn.cursor()
-        upd_name_query = "UPDATE staff SET Surame = ? WHERE Id_Staff = ?"
+        upd_surname_query = "UPDATE staff SET Surname = ? WHERE Id_Staff = ?"
         try:
-            cursor.execute(upd_name_query, (ifsurname, employee_id))
+            cursor.execute(upd_surname_query, (ifsurname, employee_id[0]))
             conn.commit()
             print("Фамилия изменена")
         except sqlite3.Error as e:
@@ -87,9 +87,36 @@ class Employee(User):
         cursor = conn.cursor()
         upd_name_query = "UPDATE staff SET Id_User = ? WHERE Id_Staff = ?"
         try:
-            cursor.execute(upd_name_query, (user_id, employee_id))
+            cursor.execute(upd_name_query, (user_id, employee_id[0]))
+            ifid = User.CheckUserExist(user_id)
+            if ifid:
+                upd_log_query = "UPDATE users SET Role = 'Employee' WHERE Id_User = ?"
+                try:
+                    cursor.execute(upd_log_query, (ifid))
+                    conn.commit()
+                except sqlite3.Error as e:
+                    print(f"Error: {e}")
+                    conn.rollback()
+            else:
+                pass
             conn.commit()
             print("Аккаунт изменён")
+        except sqlite3.Error as e:
+            print(f"Error: {e}")
+            conn.rollback()
+    def DELETE_Staff(employee_id):
+        conn = sqlite3.connect('RecordStudio.db')
+        cursor = conn.cursor()
+        try:
+            select_id_user= "SELECT Id_User FROM staff WHERE Id_Staff = ?"
+            cursor.execute(select_id_user, (employee_id[0],))
+            user_id = cursor.fetchone()
+            upd_log_query = "UPDATE users SET Role = 'User' WHERE Id_User = ?"
+            cursor.execute(upd_log_query, (user_id))
+            delete_query = "DELETE FROM staff WHERE Id_Staff = ?"
+            cursor.execute(delete_query, (employee_id[0],))
+            conn.commit()
+            print("Сотрудник удалён")
         except sqlite3.Error as e:
             print(f"Error: {e}")
             conn.rollback()

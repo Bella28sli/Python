@@ -57,7 +57,7 @@ class User(Database):
         user_login = user_login
         upd_log_query = "UPDATE users SET Login = ? WHERE Id_User = ?"
         try:
-            cursor.execute(upd_log_query, (user_login, user_id[0]))
+            cursor.execute(upd_log_query, (user_login, user_id))
             conn.commit()
             print("Логин изменён")
         except sqlite3.Error as e:
@@ -71,7 +71,7 @@ class User(Database):
         user_password = user_password
         upd_log_query = "UPDATE users SET Password = ? WHERE Id_User = ?"
         try:
-            cursor.execute(upd_log_query, (user_password, user_id[0]))
+            cursor.execute(upd_log_query, (user_password, user_id))
             conn.commit()
             print("Пароль изменён")
         except sqlite3.Error as e:
